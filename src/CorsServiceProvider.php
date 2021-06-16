@@ -7,6 +7,7 @@ use Illuminate\Foundation\Application as LaravelApplication;
 use Illuminate\Support\ServiceProvider as BaseServiceProvider;
 use Laravel\Lumen\Application as LumenApplication;
 use Illuminate\Foundation\Http\Events\RequestHandled;
+use Illuminate\Support\Facades\Config;
 
 class CorsServiceProvider extends BaseServiceProvider
 {
@@ -19,8 +20,8 @@ class CorsServiceProvider extends BaseServiceProvider
     {
         $this->mergeConfigFrom($this->configPath(), 'cors');
 
-        $this->app->singleton(CorsService::class, function ($app) {
-            return new CorsService($this->corsOptions(), $app);
+        $this->app->singleton(CorsService::class, function () {
+            return new CorsService($this->corsOptions());
         });
     }
 
@@ -61,7 +62,7 @@ class CorsServiceProvider extends BaseServiceProvider
      */
     protected function corsOptions()
     {
-        $config = $this->app['config']->get('cors');
+        $config = Config::get('cors');
 
         if ($config['exposed_headers'] && !is_array($config['exposed_headers'])) {
             throw new \RuntimeException('CORS config `exposed_headers` should be `false` or an array');

@@ -8,6 +8,8 @@ use Illuminate\Contracts\Http\Kernel;
 use Illuminate\Foundation\Http\Events\RequestHandled;
 use Illuminate\Http\Request;
 use Illuminate\Contracts\Container\Container;
+use Illuminate\Support\Facades\App;
+use Illuminate\Support\Facades\Config;
 use Symfony\Component\HttpFoundation\Response;
 
 class HandleCors
@@ -82,7 +84,7 @@ class HandleCors
      */
     public function onRequestHandled(RequestHandled $event)
     {
-        if ($this->shouldRun($event->request) && $this->container->make(Kernel::class)->hasMiddleware(static::class)) {
+        if ($this->shouldRun($event->request) && App::make(Kernel::class)->hasMiddleware(static::class)) {
             $this->addHeaders($event->request, $event->response);
         }
     }
@@ -131,7 +133,7 @@ class HandleCors
      */
     protected function getPathsByHost(string $host)
     {
-        $paths = $this->container['config']->get('cors.paths', []);
+        $paths = Config::get('cors.paths', []);
         // If where are paths by given host
         if (isset($paths[$host])) {
             return $paths[$host];
