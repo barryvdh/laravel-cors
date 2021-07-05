@@ -4,6 +4,7 @@ namespace Fruitcake\Cors;
 
 use Asm89\Stack\CorsService;
 use Illuminate\Foundation\Application as LaravelApplication;
+use Illuminate\Foundation\Http\Kernel;
 use Illuminate\Support\ServiceProvider as BaseServiceProvider;
 use Laravel\Lumen\Application as LumenApplication;
 use Illuminate\Foundation\Http\Events\RequestHandled;
@@ -30,8 +31,10 @@ class CorsServiceProvider extends BaseServiceProvider
      */
     public function boot()
     {
-        if ($this->app instanceof LaravelApplication && $this->app->runningInConsole()) {
-            $this->publishes([$this->configPath() => config_path('cors.php')], 'cors');
+        if ($this->app instanceof LaravelApplication) {
+            if ($this->app->runningInConsole()) {
+                $this->publishes([$this->configPath() => config_path('cors.php')], 'cors');
+            }
         } elseif ($this->app instanceof LumenApplication) {
             $this->app->configure('cors');
         }

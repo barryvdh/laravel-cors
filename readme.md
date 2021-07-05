@@ -58,6 +58,22 @@ Now update the config to define the paths you want to run the CORS service on, (
 'paths' => ['api/*'],
 ```
 
+## Group usage
+
+To allow CORS for middleware groups, add the `HandlePreflight` middleware in the `$middleware` property of  `app/Http/Kernel.php` class:
+
+```php
+protected $middleware = [
+    // ...
+    \Fruitcake\Cors\HandlePreflight::class,
+];
+```
+
+Now add the `Fruitcake\Cors\HandleCorsGroups` middleware to any group you want to allow CORS on.
+
+> Note: Routes that do not match existing routes will not get CORS headers, so make sure to add a fallback route.
+
+
 ## Configuration
 
 The defaults are set in `config/cors.php`. Publish the config to copy the file to your own config:
